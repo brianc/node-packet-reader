@@ -113,3 +113,23 @@ describe('1 length code', function() {
     assert.equal(this.reader.header, 2)
   })
 })
+
+describe('postgres style packet', function() {
+  beforeEach(function() {
+    this.reader = new Reader({
+      headerSize: 1,
+      lengthPadding: -4
+    })
+  })
+
+  it('reads with padded length', function() {
+    this.reader.addChunk(Buffer([1, 0, 0, 0, 8, 0, 0, 2, 0]))
+    var result = this.reader.read()
+    assert(result)
+    assert.equal(result.length, 4)
+    assert.equal(result[0], 0)
+    assert.equal(result[1], 0)
+    assert.equal(result[2], 2)
+    assert.equal(result[3], 0)
+  })
+})
