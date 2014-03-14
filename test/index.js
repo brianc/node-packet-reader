@@ -91,3 +91,25 @@ describe('variable length header', function() {
     assert.strictEqual(this.reader.read(), false)
   })
 })
+
+describe('1 length code', function() {
+  beforeEach(function() {
+    this.reader = new Reader(1)
+  })
+
+  it('reads code', function() {
+    this.reader.addChunk(Buffer([9, 0, 0, 0, 1, 1]))
+    var result = this.reader.read()
+    assert(result)
+    assert.equal(this.reader.header, 9)
+    assert.equal(result.length, 1)
+    assert.equal(result[0], 1)
+  })
+
+  it('is set on uncompleted read', function() {
+    assert.equal(this.reader.header, null)
+    this.reader.addChunk(Buffer([2, 0, 0, 0, 1]))
+    assert.strictEqual(this.reader.read(), false)
+    assert.equal(this.reader.header, 2)
+  })
+})
