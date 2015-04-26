@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/brianc/node-packet-parser.git"
+    "url": "git://github.com/brianc/node-packet-reader.git"
   },
   "author": "Brian M. Carlson",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/brianc/node-packet-parser/issues"
+    "url": "https://github.com/brianc/node-packet-reader/issues"
   },
-  "homepage": "https://github.com/brianc/node-packet-parser",
+  "homepage": "https://github.com/brianc/node-packet-reader",
   "devDependencies": {
     "mocha": "~1.16.2"
   }
