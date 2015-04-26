@@ -62,7 +62,7 @@ There are a few config options for setting optional pre-length padding byte.  Re
 
 MIT
 
-Copyright 2014 Brian M. Carlson
+Copyright 2015 Brian M. Carlson
 All rights reserved.
 
 Permission is hereby granted, free of charge, to any person
