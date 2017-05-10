@@ -41,6 +41,20 @@ describe('packet-reader', function() {
     assert.equal(result.length, 16)
   })
 
+  it('compacts buffer when when more than half is read', function() {
+    this.reader.addChunk(new Buffer([0, 0, 0, 0, 16]))
+    assert.equal(false, this.reader.read())
+    this.reader.addChunk(new Buffer([1, 2, 3, 4, 5, 6, 7, 8]))
+    assert.equal(false, this.reader.read())
+    this.reader.addChunk(new Buffer([9, 10, 11, 12, 13, 14, 15, 16]))
+    var result = this.reader.read()
+    assert.equal(result.length, 16)
+    assert.equal(this.reader.chunk.length, 32, 'should have doubled once 16 bytes were written')
+    this.reader.addChunk(new Buffer([0, 0, 0, 0, 16]))
+    assert.equal(this.reader.offset, 0, 'should have been reset to 0.')
+    assert.equal(this.reader.chunk.length, 16, 'should have been cut in half')
+  })
+
   it('reads multiple messages from single chunk', function() {
     this.reader.addChunk(new Buffer([0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 2, 1, 2]))
     var result = this.reader.read()
