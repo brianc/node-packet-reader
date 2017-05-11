@@ -8,8 +8,8 @@ var Reader = module.exports = function(options) {
   options = options || {}
   this.offset = 0
   this.lastChunk = false
-  this.chunk = Buffer.alloc(4);
-  this.chunkLength = 0;
+  this.chunk = null
+  this.chunkLength = 0
   this.headerSize = options.headerSize || 0
   this.lengthPadding = options.lengthPadding || 0
   this.header = null
@@ -17,40 +17,32 @@ var Reader = module.exports = function(options) {
 }
 
 Reader.prototype.addChunk = function(chunk) {
-  var newChunkLength = chunk.length;
-  var newLength = this.chunkLength + newChunkLength;
+  if (!this.chunk || this.offset === this.chunkLength) {
+    this.chunk = chunk
+    this.chunkLength = chunk.length
+    this.offset = 0
+    return
+  }
+
+  var newChunkLength = chunk.length
+  var newLength = this.chunkLength + newChunkLength
 
   if (newLength > this.chunk.length) {
-    var newBufferLength = this.chunk.length * 2;
+    var newBufferLength = this.chunk.length * 2
     while (newLength >= newBufferLength) {
-      newBufferLength *= 2;
+      newBufferLength *= 2
     }
-    var newBuffer = new Buffer(newBufferLength);
-    this.chunk.copy(newBuffer);
-    this.chunk = newBuffer;
+    var newBuffer = new Buffer(newBufferLength)
+    this.chunk.copy(newBuffer)
+    this.chunk = newBuffer
   }
-  chunk.copy(this.chunk, this.chunkLength);
-  this.chunkLength = newLength;
-
-  // If more than half of the data has been read, shrink
-  // the buffer and reset the offset to reclaim the memory
-  var halfLength = this.chunk.length / 2;
-  if (this.offset > halfLength) {
-    var newBuffer = new Buffer(halfLength);
-    this.chunk.copy(newBuffer, 0, this.offset);
-    this.chunk = newBuffer;
-    this.chunkLength -= this.offset;
-    this.offset = 0;
-  }
-}
-
-Reader.prototype._save = function() {
-  return false
+  chunk.copy(this.chunk, this.chunkLength)
+  this.chunkLength = newLength
 }
 
 Reader.prototype.read = function() {
   if(this.chunkLength < (this.headerSize + 4 + this.offset)) {
-    return this._save()
+    return false
   }
 
   if(this.headerSize) {
@@ -63,7 +55,7 @@ Reader.prototype.read = function() {
   //next item spans more chunks than we have
   var remaining = this.chunkLength - (this.offset + 4 + this.headerSize)
   if(length > remaining) {
-    return this._save()
+    return false
   }
 
   this.offset += (this.headerSize + 4)
