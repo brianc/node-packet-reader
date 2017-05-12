@@ -41,6 +41,19 @@ describe('packet-reader', function() {
     assert.equal(result.length, 16)
   })
 
+  it('resets internal buffer at end of packet', function() {
+    this.reader.addChunk(new Buffer([0, 0, 0, 0, 16]))
+    this.reader.addChunk(new Buffer([1, 2, 3, 4, 5, 6, 7, 8]))
+    this.reader.addChunk(new Buffer([9, 10, 11, 12, 13, 14, 15, 16]))
+    var result = this.reader.read()
+    assert.equal(result.length, 16)
+
+    var newChunk = new Buffer([0, 0, 0, 0, 16])
+    this.reader.addChunk(newChunk)
+    assert.equal(this.reader.offset, 0, 'should have been reset to 0.')
+    assert.strictEqual(this.reader.chunk, newChunk)
+  })
+
   it('reads multiple messages from single chunk', function() {
     this.reader.addChunk(new Buffer([0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 2, 1, 2]))
     var result = this.reader.read()
