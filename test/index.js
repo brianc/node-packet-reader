@@ -146,3 +146,23 @@ describe('postgres style packet', function() {
     assert.equal(result[3], 0)
   })
 })
+
+
+describe('little-endian style packet', function() {
+  beforeEach(function() {
+    this.reader = new Reader({
+      headerSize: 4,
+      lengthBE: false
+    })
+  })
+
+  it('reads 4-byte LE header', function() {
+    this.reader.addChunk(new Buffer([0x06, 0xEA, 0xB1, 0x7A, 0, 0, 0, 2, 7, 11]))
+    var result = this.reader.read()
+    assert(result)
+    assert.equal(this.reader.header, 0x06EAB17A)
+    assert.equal(result.length, 2)
+    assert.equal(result[0], 7)
+    assert.equal(result[1], 11)
+  })
+})
