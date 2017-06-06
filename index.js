@@ -12,7 +12,7 @@ var Reader = module.exports = function(options) {
   this.chunkLength = 0
   this.headerSize = options.headerSize || 0
   this.lengthPadding = options.lengthPadding || 0
-  this.lengthBE = options.lengthBE || true
+  this.lengthLE = options.lengthLE || false
   this.lengthSize = options.lengthSize || 4
   assert( this.lengthSize <= 6, 'lengths of more than 6 bytes are not currently supported' )
   this.header = null
@@ -49,16 +49,16 @@ Reader.prototype.read = function() {
   }
 
   if(this.headerSize) {
-    if ( this.lengthBE )
-      this.header += this.chunk.readUIntBE( this.offset, this.headerSize );
-    else this.header += this.chunk.readUIntLE( this.offset, this.headerSize );
+    if ( this.lengthLE )
+      this.header += this.chunk.readUIntLE( this.offset, this.headerSize );
+    else this.header += this.chunk.readUIntBE( this.offset, this.headerSize );
   }
 
   //read length of next item
   var length = this.lengthPadding;
-  if ( this.lengthBE )
-    length += this.chunk.readUIntBE( this.offset + this.headerSize, this.lengthSize );
-  else length += this.chunk.readUIntLE( this.offset + this.headerSize, this.lengthSize );
+  if ( this.lengthLE )
+    length += this.chunk.readUIntLE( this.offset + this.headerSize, this.lengthSize );
+  else length += this.chunk.readUIntBE( this.offset + this.headerSize, this.lengthSize );
 
   //next item spans more chunks than we have
   var remaining = this.chunkLength - (this.offset + this.lengthSize + this.headerSize)
