@@ -50,8 +50,8 @@ Reader.prototype.read = function() {
 
   if(this.headerSize) {
     if ( this.lengthLE )
-      this.header += this.chunk.readUIntLE( this.offset, this.headerSize );
-    else this.header += this.chunk.readUIntBE( this.offset, this.headerSize );
+      this.header = this.chunk.readUIntLE( this.offset, this.headerSize );
+    else this.header = this.chunk.readUIntBE( this.offset, this.headerSize );
   }
 
   //read length of next item
