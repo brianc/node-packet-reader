@@ -20,6 +20,6 @@
   },
   "homepage": "https://github.com/brianc/node-packet-reader",
   "devDependencies": {
-    "mocha": "~1.16.2"
+    "mocha": "~1.21.5"
   }
 }
