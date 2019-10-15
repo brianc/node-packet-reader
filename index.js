@@ -7,7 +7,6 @@ var Reader = module.exports = function(options) {
   }
   options = options || {}
   this.offset = 0
-  this.lastChunk = false
   this.chunk = null
   this.chunkLength = 0
   this.headerSize = options.headerSize || 0
