@@ -21,5 +21,6 @@
   "homepage": "https://github.com/brianc/node-packet-reader",
   "devDependencies": {
     "mocha": "~1.21.5"
-  }
+  },
+  "files": []
 }
