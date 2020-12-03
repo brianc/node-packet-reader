@@ -1,6 +1,6 @@
 {
   "name": "packet-reader",
-  "version": "0.3.1",
+  "version": "1.0.0",
   "description": "Read binary packets...",
   "main": "index.js",
   "directories": {
@@ -20,6 +20,6 @@
   },
   "homepage": "https://github.com/brianc/node-packet-reader",
   "devDependencies": {
-    "mocha": "~1.16.2"
+    "mocha": "~1.21.5"
   }
 }
